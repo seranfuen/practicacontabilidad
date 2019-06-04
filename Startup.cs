@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PracticaContabilidad.Model;
+using PracticaContabilidad.Model.Maintenance;
+using PracticaContabilidad.Model.Repositories;
 
 namespace PracticaContabilidad
 {
@@ -21,8 +24,10 @@ namespace PracticaContabilidad
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            app.UseStatusCodePages();
+            app.UseStaticFiles();
 
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -32,7 +37,9 @@ namespace PracticaContabilidad
             services.AddMvc();
             services.AddDbContext<ContabilidadDbContext>(builder =>
                 builder.UseSqlServer(Configuration.GetConnectionString("ContabilidadConnection")));
+            services.AddScoped<IContabilidadSeeder, DevelopmentContabilidadSeeder>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddAutoMapper(cfg => { }, typeof(Startup));
         }
-
     }
 }

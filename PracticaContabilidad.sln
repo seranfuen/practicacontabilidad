@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28902.138
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticaContabilidad", "PracticaContabilidad.csproj", "{45C0D8CA-8918-466C-B797-DFC479C544C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PracticaContabilidad", "PracticaContabilidad.csproj", "{45C0D8CA-8918-466C-B797-DFC479C544C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticaContabilidadTests", "..\PracticaContabilidadTests\PracticaContabilidadTests.csproj", "{49223A79-9C37-458D-8DF6-34B419CA25F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{45C0D8CA-8918-466C-B797-DFC479C544C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45C0D8CA-8918-466C-B797-DFC479C544C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45C0D8CA-8918-466C-B797-DFC479C544C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49223A79-9C37-458D-8DF6-34B419CA25F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49223A79-9C37-458D-8DF6-34B419CA25F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49223A79-9C37-458D-8DF6-34B419CA25F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49223A79-9C37-458D-8DF6-34B419CA25F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

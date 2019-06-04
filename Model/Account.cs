@@ -13,17 +13,17 @@ namespace PracticaContabilidad.Model
 
         /// <summary>
         ///     The code as per the Spanish PGC, it must have certain length to represent main accounts
-        ///     and sub-accounts. By way of example:
-        ///     400. Suppliers (proveedores)
-        ///     400.0. Suppliers in euro (proveedores euros)
-        ///     400.0.1 (equals 400.0.0.xxxxxxxx) where xxxx is defined by the user, for accounts payable for one particular
-        ///     supplier
-        ///     400.0.2 another supplier
+        ///     and sub-accounts.
+        ///     We expect either a string of up to 9 digits or optionally a dot. The dot establishes that whatever comes after
+        ///     it will go to the last part of the code, so that for example:
+        ///     421 is transformed to  421000000 (9 digits)
+        ///     42.1 is transformed to 420000001
+        ///     420.100  is transformed to 420000100
         /// </summary>
         [Required]
         [MinLength(1)]
-        [MaxLength(15)]
-        [RegularExpression("^[0-9]*$")]
+        [MaxLength(11)]
+        [RegularExpression("^[0-9]+.[0-9]+$")]
         public string Code { get; set; }
 
         [Required] public string Name { get; set; }
