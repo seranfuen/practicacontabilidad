@@ -1,0 +1,36 @@
+﻿@using PracticaContabilidad.Model
+@model PracticaContabilidad.Model.InsertJournalEntryViewModel
+
+@{
+    ViewData["Title"] = "Edit journal entry";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Create entry</h2>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div class="form-group">
+                <label asp-for="EntryDate"></label>
+                <span>@Model.EntryDate.ToShortDateString()</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DebitAccountId"></label>
+                <select asp-for="DebitAccountId" asp-items="@(new SelectList(Model.Accounts, nameof(Account.AccountId), nameof(Account.Name)))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreditAccountId"></label>
+                <select asp-for="CreditAccountId" asp-items="@(new SelectList(Model.Accounts, nameof(Account.AccountId), nameof(Account.Name)))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EntryAmount"></label>
+                <input asp-for="EntryAmount"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Remarks"></label>
+                <textarea class="form-control" asp-for="Remarks" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

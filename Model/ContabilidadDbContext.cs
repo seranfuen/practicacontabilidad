@@ -9,5 +9,6 @@ namespace PracticaContabilidad.Model
         }
 
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<LedgerEntry> LedgerEntries { get; set; }
     }
 }

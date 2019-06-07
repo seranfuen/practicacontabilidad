@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PracticaContabilidad.Model
@@ -41,5 +42,7 @@ namespace PracticaContabilidad.Model
         [Required] public decimal Credit { get; set; }
 
         [NotMapped] public decimal Balance => Debit - Credit;
+
+        private ICollection<LedgerEntry> LedgerEntries { get; set; }
     }
 }
