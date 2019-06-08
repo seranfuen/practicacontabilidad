@@ -1,7 +1,11 @@
-﻿namespace PracticaContabilidad.Model.Repositories
+﻿using System.Linq;
+
+namespace PracticaContabilidad.Model.Repositories
 {
     public interface ILedgerEntryRepository
     {
+        IQueryable<LedgerEntry> LedgerEntries { get; }
+
         /// <summary>
         ///     This is a very simple accounting entry where the same quantity that is debited to one
         ///     account is credited to the other.

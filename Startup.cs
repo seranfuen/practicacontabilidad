@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PracticaContabilidad.Model;
 using PracticaContabilidad.Model.Maintenance;
 using PracticaContabilidad.Model.Repositories;
+using PracticaContabilidad.Model.UnitOfWork;
 
 namespace PracticaContabilidad
 {
@@ -39,7 +40,9 @@ namespace PracticaContabilidad
                 builder.UseSqlServer(Configuration.GetConnectionString("ContabilidadConnection")));
             services.AddScoped<IContabilidadSeeder, DevelopmentContabilidadSeeder>();
             services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<ILedgerEntryRepository, LedgerEntryRepository>();
             services.AddAutoMapper(cfg => { }, typeof(Startup));
+            services.AddSingleton<ILedgerEntryUoWFactory, LedgerEntryUoWFactory>();
         }
     }
 }

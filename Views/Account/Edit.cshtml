@@ -2,16 +2,16 @@
 @model PracticaContabilidad.Model.Account
 
 @{
-    ViewData["Title"] = "Create/Edit Account";
+    ViewData["Title"] = ViewBag.Title ?? "Modificar cuenta";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<h2>Edit</h2>
-
-<h4>Account</h4>
-<hr />
+    <div class="jumbotron">
+        <h2>@(ViewBag.Title ?? "Modificar cuenta")</h2>
+        <p>Desde aquí puedes añadir una cuenta nueva o bien modificar una existente.</p>
+    </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AccountId" value="@Model.AccountId"/>
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
+                <select class="form-control" asp-for="AccountType" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
                 <span asp-validation-for="AccountType" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -44,13 +44,13 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Guardar" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver al listado de cuentas</a>
 </div>
 

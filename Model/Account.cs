@@ -25,23 +25,25 @@ namespace PracticaContabilidad.Model
         [MinLength(1)]
         [MaxLength(11)]
         [RegularExpression("^[0-9]+.[0-9]+$")]
+        [Display(Name = "Código")]
         public string Code { get; set; }
 
-        [Required] public string Name { get; set; }
+        [Display(Name = "Nombre")] [Required] public string Name { get; set; }
 
         /// <summary>
         ///     Optionally we say if the account is mainly a debit account (e.g. cash) or
         ///     a credit account (e.g. accounts payable)
         /// </summary>
+        [Display(Name = "Tipo")]
         public AccountType? AccountType { get; set; }
 
-        public string Description { get; set; }
+        [Display(Name = "Descripción")] public string Description { get; set; }
 
-        [Required] public decimal Debit { get; set; }
+        [Display(Name = "Debe")] [Required] public decimal Debit { get; set; }
 
-        [Required] public decimal Credit { get; set; }
+        [Display(Name = "Haber")] [Required] public decimal Credit { get; set; }
 
-        [NotMapped] public decimal Balance => Debit - Credit;
+        [Display(Name = "Saldo")] [NotMapped] public decimal Balance => Debit - Credit;
 
         private ICollection<LedgerEntry> LedgerEntries { get; set; }
     }

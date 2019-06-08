@@ -8,18 +8,18 @@ namespace PracticaContabilidad.Model
     {
         public string Remarks { get; set; }
 
-        [Required] [Display(Name = "Date")] public DateTime EntryDate { get; set; }
+        [Required] [Display(Name = "Fecha")] public DateTime EntryDate { get; set; }
 
-        [Display(Name = "Debit Account")]
+        [Display(Name = "Cuenta a cargar")]
         [Required]
         public int DebitAccountId { get; set; }
 
-        [Display(Name = "Credit Account")]
+        [Display(Name = "Cuena a abonar")]
         [Required]
         public int CreditAccountId { get; set; }
 
         [Required]
-        [Display(Name = "Amount")]
+        [Display(Name = "Cantidad")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:n2} €")]
         [Range(0.01, double.MaxValue)]
         public decimal EntryAmount { get; set; }

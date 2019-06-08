@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PracticaContabilidad.Helpers;
 using PracticaContabilidad.Model;
 using PracticaContabilidad.Model.Repositories;
@@ -17,11 +18,13 @@ namespace PracticaContabilidad.Controller
 
         public ViewResult Create()
         {
+            ViewBag.Title = "Crear cuenta";
             return View("Edit", new Account());
         }
 
         public ViewResult Edit(int accountId)
         {
+            ViewBag.Title = "Modificar cuenta";
             return View("Edit", _repository.Accounts.Single(account => account.AccountId == accountId));
         }
 
@@ -38,7 +41,7 @@ namespace PracticaContabilidad.Controller
 
             _repository.Save(account);
 
-            return View("Index", _repository.Accounts.OrderBy(acc => acc.Code));
+            return View("Index", _repository.Accounts.AsNoTracking().OrderBy(acc => acc.Code));
         }
 
         private void SetUserInputCodeToLongFormat(Account account)

@@ -2,14 +2,19 @@
 @model PracticaContabilidad.Model.InsertJournalEntryViewModel
 
 @{
-    ViewData["Title"] = "Edit journal entry";
+    ViewData["Title"] = "Introducir asiento";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<h2>Create entry</h2>
+<div class="jumbotron">
+    <h2>Nuevo asiento</h2>
+    <p>Introducir un asiento simple, que carga y abona las cuentas seleccionadas por la misma cantidad y concepto.</p>
+</div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="alert-danger"></div>
+            <input type="hidden" asp-for="EntryDate" value="@Model.EntryDate"/>
             <div class="form-group">
                 <label asp-for="EntryDate"></label>
                 <span>@Model.EntryDate.ToShortDateString()</span>
@@ -30,7 +35,7 @@
                 <label asp-for="Remarks"></label>
                 <textarea class="form-control" asp-for="Remarks" rows="5"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
     </div>
 </div>

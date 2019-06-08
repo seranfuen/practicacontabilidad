@@ -1,8 +1,10 @@
-﻿namespace PracticaContabilidad.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PracticaContabilidad.Model
 {
     public enum AccountType
     {
-        Credit = 1,
-        Debit = 2
+        [Display(Name = "Acreedora")] Credit = 1,
+        [Display(Name = "Deudora")] Debit = 2
     }
 }

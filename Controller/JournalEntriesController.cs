@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PracticaContabilidad.Model;
 using PracticaContabilidad.Model.Repositories;
 
@@ -21,19 +23,25 @@ namespace PracticaContabilidad.Controller
 
         public IActionResult Create()
         {
-            return View(new InsertJournalEntryViewModel
+            return View("Edit", new InsertJournalEntryViewModel
             {
-                Accounts = _accountRepository.Accounts.ToList(),
+                Accounts = GetAllAccounts(),
                 EntryDate = DateTime.Now
             });
         }
+
 
         [HttpPost]
         public IActionResult Edit(InsertJournalEntryViewModel viewModel)
         {
             ValidateNewEntry(viewModel);
 
-            if (!ModelState.IsValid) return Create();
+            if (!ModelState.IsValid)
+            {
+                viewModel.Accounts = GetAllAccounts();
+                return View("Edit", viewModel);
+            }
+
             _ledgerEntryRepository.InsertDebitCreditEntries(new LedgerEntry
             {
                 AccountId = viewModel.DebitAccountId,
@@ -53,16 +61,22 @@ namespace PracticaContabilidad.Controller
 
         public IActionResult Index()
         {
-            return View();
+            return View(_ledgerEntryRepository.LedgerEntries.AsNoTracking().Include(entry => entry.Account)
+                .OrderByDescending(entry => entry.EntryDate));
+        }
+
+        private List<Account> GetAllAccounts()
+        {
+            return _accountRepository.Accounts.ToList();
         }
 
         private void ValidateNewEntry(InsertJournalEntryViewModel viewModel)
         {
             if (viewModel.EntryAmount <= 0m)
-                ModelState.AddModelError(nameof(viewModel.EntryAmount), "The entry amount cannot be 0 or less than 0");
+                ModelState.AddModelError(nameof(viewModel.EntryAmount), "La cantidad debe ser mayor que 0");
             if (viewModel.DebitAccountId == viewModel.CreditAccountId)
                 ModelState.AddModelError(nameof(viewModel.DebitAccountId),
-                    "The debit and the credit accounts cannot be the same");
+                    "No se puede cargar y abonar la misma cuenta.");
         }
     }
 }

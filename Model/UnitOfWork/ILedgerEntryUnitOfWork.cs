@@ -3,7 +3,7 @@
     public interface ILedgerEntryUnitOfWork
     {
         void AddEntry(LedgerEntry entry);
-        void DebitAccount(int accountId);
-        void CreditAccount(int accountId);
+        void CreditAccount(int accountId, decimal amount);
+        void DebitAccount(int accountId, decimal amount);
     }
 }

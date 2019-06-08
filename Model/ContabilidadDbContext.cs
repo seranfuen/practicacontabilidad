@@ -4,6 +4,10 @@ namespace PracticaContabilidad.Model
 {
     public class ContabilidadDbContext : DbContext
     {
+        public ContabilidadDbContext()
+        {
+
+        }
         public ContabilidadDbContext(DbContextOptions options) : base(options)
         {
         }
