@@ -10,6 +10,7 @@ namespace PracticaContabilidad.Controller
 {
     public class JournalEntriesController : Microsoft.AspNetCore.Mvc.Controller
     {
+        private const int ItemsPerPage = 10;
         private readonly IAccountRepository _accountRepository;
         private readonly ILedgerEntryRepository _ledgerEntryRepository;
 
@@ -59,13 +60,16 @@ namespace PracticaContabilidad.Controller
             return Index();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            return View(_ledgerEntryRepository.LedgerEntries.AsNoTracking().Include(entry => entry.Account)
-                .OrderByDescending(entry => entry.EntryDate));
+            var journalEntries = _ledgerEntryRepository.LedgerEntries.AsNoTracking().Include(entry => entry.Account)
+                .OrderByDescending(entry => entry.EntryDate).Skip((page - 1) * ItemsPerPage).Take(ItemsPerPage);
+            return View("Index",
+                new JournalEntriesViewModel(journalEntries,
+                    new Pagination(_ledgerEntryRepository.LedgerEntries.Count(), ItemsPerPage, page)));
         }
 
-        private List<Account> GetAllAccounts()
+        private IEnumerable<Account> GetAllAccounts()
         {
             return _accountRepository.Accounts.ToList();
         }

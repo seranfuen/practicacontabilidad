@@ -1,5 +1,4 @@
-﻿@model IEnumerable<PracticaContabilidad.Model.LedgerEntry>
-
+﻿@model PracticaContabilidad.Model.JournalEntriesViewModel
 @{
     ViewData["Title"] = "Asientos";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
@@ -24,7 +23,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var entry in Model)
+            @foreach (var entry in Model.JournalEntries)
             {
                 <tr>
                     <td>@entry.EntryDate.ToShortDateString()</td>
@@ -38,11 +37,12 @@
             }
             <tr>
                 <td colspan="2"></td>
-                <td class="text-right">@Model.Sum(entry => entry.Debit ?? 0).ToString("c")</td>
-                <td class="text-right">@Model.Sum(entry => entry.Credit ?? 0).ToString("c")</td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Debit ?? 0).ToString("c")</td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Credit ?? 0).ToString("c")</td>
                 <td></td>
             </tr>
             </tbody>
         </table>
     </div>
+    <pagination action="Index" controller="JournalEntries" pagination="@Model.Pagination"></pagination>
 </div>
