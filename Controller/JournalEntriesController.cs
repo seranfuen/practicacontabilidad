@@ -31,6 +31,10 @@ namespace PracticaContabilidad.Controller
             });
         }
 
+        public ViewResult AddJournalEntry()
+        {
+            return View();
+        }
 
         [HttpPost]
         public IActionResult Edit(InsertJournalEntryViewModel viewModel)
