@@ -45,14 +45,16 @@ namespace PracticaContabilidad.Helpers
             output.TagName = "nav";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.SetAttribute("class", "row justify-content-center col-md-8");
+            output.Content.AppendHtml(CreatePageList());
+        }
 
+        private TagBuilder CreatePageList()
+        {
             var listBuilder = new TagBuilder("ul");
             listBuilder.AddCssClass("pagination");
 
-
             for (var page = 1; page <= Pagination.TotalPages; page++) AddPageLink(page, listBuilder);
-
-            output.Content.AppendHtml(listBuilder);
+            return listBuilder;
         }
 
         private void AddPageLink(int page, TagBuilder listBuilder)
