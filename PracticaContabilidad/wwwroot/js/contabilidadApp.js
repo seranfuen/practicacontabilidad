@@ -1,11 +1,25 @@
 ﻿var app = angular.module("contabilidadApp", []);
 
+app.factory("accountService",
+    function($http) {
+        var result = { Accounts: [] };
+
+        $http.get("/api/account").then(function(response) {
+            result.Accounts = response.data;
+        });
+
+        return result;
+    });
+
 app.controller("LedgerEntryController",
-    function($scope) {
+    function($scope, accountService) {
         // We add a new line (ledger entry, apunte contable)
         $scope.addNewLine = function() {
             $scope.Lines.push({});
         };
+
+        $scope.AccountClass = [];
+        $scope.AccountName = [];
 
         // Make a short account code have 9 digits exactly
         // If no dot is present, right pad with zeros
@@ -23,10 +37,20 @@ app.controller("LedgerEntryController",
                 rightSide = "";
             }
             $scope.Lines[index].Account = leftSide + rightSide.padStart(9 - leftSide.length, "0");
+            $scope.AccountClass[index] = accountService.Accounts.some(function(account) {
+                    return account.code === $scope.Lines[index].Account;
+                })
+                ? ""
+                : "not-existing";
+            var accountsMatching = accountService.Accounts.filter(function(account) {
+                return account.code === $scope.Lines[index].Account;
+            });
+
+            $scope.AccountName[index] = accountsMatching.length > 0 ? accountsMatching[0].name : "";
         };
 
         $scope.updateTotals = function() {
-            $scope.TotalsLine.DebitSum = $scope.Lines.reduce(function (total, line) {
+            $scope.TotalsLine.DebitSum = $scope.Lines.reduce(function(total, line) {
                     return total + (parseInt(line.Debit) || 0);
                 },
                 0);

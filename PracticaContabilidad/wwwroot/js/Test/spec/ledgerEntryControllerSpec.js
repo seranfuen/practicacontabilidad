@@ -16,7 +16,7 @@
 
                 beforeEach(function() {
                     $scope = $rootScope.$new();
-                    controller = $controller("LedgerEntryController", { $scope: $scope });
+                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
                 });
 
                 it("When creating new controller, it has one entry by default with no data",
@@ -26,16 +26,16 @@
             });
 
         describe("UpdateTotals",
-            function () {
+            function() {
                 var $scope, controller;
 
-                beforeEach(function () {
+                beforeEach(function() {
                     $scope = $rootScope.$new();
-                    controller = $controller("LedgerEntryController", { $scope: $scope });
+                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
                 });
 
                 it("The totals line is 0 for both credit and debit if no elements exist",
-                    function () {
+                    function() {
                         $scope.Lines = [];
                         $scope.updateTotals();
                         expect($scope.TotalsLine.CreditSum).toEqual(0);
@@ -43,7 +43,7 @@
                     });
 
                 it("The totals line is 0 for both credit and debit if element is undefined",
-                    function () {
+                    function() {
                         $scope.Lines = [{}];
                         $scope.updateTotals();
                         expect($scope.TotalsLine.CreditSum).toEqual(0);
@@ -51,7 +51,7 @@
                     });
 
                 it("The totals line is the sum for both debit and credit",
-                    function () {
+                    function() {
                         $scope.Lines = [
                             {
                                 Debit: 300,
@@ -68,7 +68,7 @@
                     });
 
                 it("The totals line is parse to integer",
-                    function () {
+                    function() {
                         $scope.Lines = [
                             {
                                 Debit: "300",
@@ -91,9 +91,14 @@
 
                 var $scope, controller;
 
+                var accountService = {
+                    Accounts: [{ code: "420000002", name: "General kenobi" }]
+                };
+
                 beforeEach(function() {
                     $scope = $rootScope.$new();
-                    controller = $controller("LedgerEntryController", { $scope: $scope });
+                    controller =
+                        $controller("LedgerEntryController", { $scope: $scope, accountService: accountService });
                 });
 
 
@@ -121,7 +126,7 @@
                     });
 
                 it("420000000 is unchanged",
-                    function () {
+                    function() {
                         $scope.addNewLine();
                         $scope.Lines[1].Account = "420000000";
                         $scope.fillAccount(1);
@@ -149,6 +154,32 @@
                         $scope.fillAccount(0);
                         expect($scope.Lines[0].Account).toEqual("4200000000");
                     });
+
+                it("Sets accountClass to not-existing if the account does not exist",
+                    function() {
+                        $scope.Lines[0].Account = "420.1";
+                        $scope.fillAccount(0);
+                        expect($scope.AccountClass[0]).toEqual("not-existing");
+                    }
+                );
+
+                it("Sets AccountClass to empty if the account exists exist",
+                    function() {
+                        $scope.Lines[0].Account = "420.2";
+                        $scope.fillAccount(0);
+                        expect($scope.AccountClass[0]).toEqual("");
+                    }
+                );
+
+                it("Sets AccountName if exists, removes if it does not",
+                    function() {
+                        $scope.Lines[0].Account = "420.2";
+                        $scope.fillAccount(0);
+                        expect($scope.AccountName[0]).toEqual("General kenobi");
+                        $scope.Lines[0].Account = "420.1";
+                        $scope.fillAccount(0);
+                        expect($scope.AccountName[0]).toEqual("");
+                    });
             });
 
         describe("addNewLine",
@@ -157,7 +188,7 @@
 
                 beforeEach(function() {
                     $scope = $rootScope.$new();
-                    controller = $controller("LedgerEntryController", { $scope: $scope });
+                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
                 });
 
                 it("Adds new line",
