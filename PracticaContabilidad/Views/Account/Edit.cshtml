@@ -1,0 +1,56 @@
+﻿@using PracticaContabilidad.Model
+@model PracticaContabilidad.Model.Account
+
+@{
+    ViewData["Title"] = ViewBag.Title ?? "Modificar cuenta";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+    <div class="jumbotron">
+        <h2>@(ViewBag.Title ?? "Modificar cuenta")</h2>
+        <p>Desde aquí puedes añadir una cuenta nueva o bien modificar una existente.</p>
+    </div>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AccountId" value="@Model.AccountId"/>
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                @if (Model.AccountId > 0)
+                {
+                    <span>@Model.Code</span>
+                    <input type="hidden" asp-for="Code" value="@Model.Code"/>
+                }
+                else
+                {
+                    <input asp-for="Code" class="form-control"/>
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccountType" class="control-label"></label>
+                <select class="form-control" asp-for="AccountType" asp-items="Html.GetEnumSelectList<AccountType>()"></select>
+                <span asp-validation-for="AccountType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver al listado de cuentas</a>
+</div>
+

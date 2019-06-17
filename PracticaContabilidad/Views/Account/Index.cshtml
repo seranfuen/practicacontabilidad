@@ -1,0 +1,58 @@
+﻿@model IEnumerable<PracticaContabilidad.Model.Account>
+@{
+    ViewData["Title"] = "Cuentas";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Cuentas</h2>
+<div class="row mb-4">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-action="Create">Añadir</a>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-9">
+        <table class="table table-sm table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th class="text-center">Debe</th>
+                <th class="text-center">Haber</th>
+                <th class="text-center">Saldo</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <td>@account.Code</td>
+                    <td>@account.Name</td>
+                    <td>@account.Description</td>
+                    <td class="text-right">
+                        @($"{account.Debit:n2} €")
+                    </td>
+                    <td class="text-right">
+                        @($"{account.Credit:n2} €")
+                    </td>
+                    <td class="text-right">
+                        @($"{account.Balance:n2} €")
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-accountId="@account.AccountId">Edit</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3"></td>
+                <td>@($"{Model.Sum(acc => acc.Debit):n2} €")</td>
+                <td>@($"{Model.Sum(acc => acc.Credit):n2} €")</td>
+                <td>@($"{Model.Sum(acc => acc.Balance):n2} €")</td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>

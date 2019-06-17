@@ -1,0 +1,41 @@
+﻿@using PracticaContabilidad.Model
+@model PracticaContabilidad.Model.InsertJournalEntryViewModel
+
+@{
+    ViewData["Title"] = "Introducir asiento";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<div class="jumbotron">
+    <h2>Nuevo asiento</h2>
+    <p>Introducir un asiento simple, que carga y abona las cuentas seleccionadas por la misma cantidad y concepto.</p>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="alert-danger"></div>
+            <input type="hidden" asp-for="EntryDate" value="@Model.EntryDate"/>
+            <div class="form-group">
+                <label asp-for="EntryDate"></label>
+                <span>@Model.EntryDate.ToShortDateString()</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DebitAccountId"></label>
+                <select asp-for="DebitAccountId" asp-items="@(new SelectList(Model.Accounts, nameof(Account.AccountId), nameof(Account.Name)))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreditAccountId"></label>
+                <select asp-for="CreditAccountId" asp-items="@(new SelectList(Model.Accounts, nameof(Account.AccountId), nameof(Account.Name)))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EntryAmount"></label>
+                <input asp-for="EntryAmount"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Remarks"></label>
+                <textarea class="form-control" asp-for="Remarks" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>

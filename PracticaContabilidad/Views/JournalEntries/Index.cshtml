@@ -1,0 +1,48 @@
+﻿@model PracticaContabilidad.Model.JournalEntriesViewModel
+@{
+    ViewData["Title"] = "Asientos";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Asientos</h2>
+<div class="row mb-4">
+    <div class="col-md-2">
+        <a class="btn btn-primary" asp-action="Create">Añadir</a>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-9">
+        <table class="table table-sm table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Cuenta</th>
+                <th class="text-center">Debe</th>
+                <th class="text-center">Haber</th>
+                <th>Observaciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var entry in Model.JournalEntries)
+            {
+                <tr>
+                    <td>@entry.EntryDate.ToShortDateString()</td>
+                    <td>
+                        <a asp-controller="Account" asp-action="Edit" asp-route-accountId="@entry.AccountId">@entry.Account.Code</a>
+                    </td>
+                    <td title="@entry.Account.Name" class="text-right">@(entry.EntryValue > 0 ? entry.EntryValue.ToString("c") : null)</td>
+                    <td class="text-right">@(entry.EntryValue < 0 ? (-entry.EntryValue).ToString("c") : null)</td>
+                    <td>@entry.Remarks</td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2"></td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Debit ?? 0).ToString("c")</td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Credit ?? 0).ToString("c")</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <pagination action="Index" controller="JournalEntries" pagination="@Model.Pagination"></pagination>
+</div>
