@@ -12,19 +12,47 @@ app.factory("accountService",
     });
 
 app.controller("LedgerEntryController",
-    function($scope, accountService) {
+    function($scope, $http, accountService) {
         // We add a new line (ledger entry, apunte contable)
+
         $scope.addNewLine = function() {
-            $scope.Lines.push({});
+            $scope.Lines.push({
+                Debit: 0,
+                Credit: 0
+            });
         };
 
         $scope.AccountClass = [];
         $scope.AccountName = [];
 
+
+        function fillAccountName(index) {
+
+            var accountsMatching = accountService.Accounts.filter(function(account) {
+                return account.code === $scope.Lines[index].Account;
+            });
+
+            $scope.AccountName[index] = accountsMatching.length > 0 ? accountsMatching[0].name : "";
+        }
+
+        function setAccountClass(index) {
+            $scope.AccountClass[index] = existsAccount($scope.Lines[index].Account)
+                ? ""
+                : "not-existing";
+        }
+
+        function existsAccount(accountCode) {
+            return accountService.Accounts.some(function(account) {
+                return account.code === accountCode;
+            });
+        }
+
         // Make a short account code have 9 digits exactly
         // If no dot is present, right pad with zeros
         // If present, left pad up to the digits after the dot
+        // It also fills in account name information, if it exists
         $scope.fillAccount = function(index) {
+
             var code = $scope.Lines[index].Account;
             if (!code || code.length > 9) return;
             if (!code.match(/^[0-9]+\.?[0-9]+$/)) return;
@@ -37,16 +65,9 @@ app.controller("LedgerEntryController",
                 rightSide = "";
             }
             $scope.Lines[index].Account = leftSide + rightSide.padStart(9 - leftSide.length, "0");
-            $scope.AccountClass[index] = accountService.Accounts.some(function(account) {
-                    return account.code === $scope.Lines[index].Account;
-                })
-                ? ""
-                : "not-existing";
-            var accountsMatching = accountService.Accounts.filter(function(account) {
-                return account.code === $scope.Lines[index].Account;
-            });
 
-            $scope.AccountName[index] = accountsMatching.length > 0 ? accountsMatching[0].name : "";
+            fillAccountName(index);
+            setAccountClass(index);
         };
 
         $scope.updateTotals = function() {
@@ -62,9 +83,68 @@ app.controller("LedgerEntryController",
 
         $scope.Lines = [];
 
+        $scope.$watch("Lines",
+            function(newValue, oldValue) {
+                for (var i = 0; i < $scope.Lines.length; i++) {
+                    if (newValue[i].Debit < 0) {
+                        $scope.Lines[i].Debit = 0;
+                    }
+                    if (newValue[i].Credit < 0) {
+                        $scope.Lines[i].Credit = 0;
+                    }
+
+                    if (typeof oldValue[i] === 'undefined') continue;
+
+                    if (oldValue[i].Debit !== newValue[i].Debit && newValue[i].Debit !== 0) {
+                        $scope.Lines[i].Credit = 0;
+                    } else if (oldValue[i].Credit !== newValue[i].Credit && newValue[i].Credit !== 0) {
+                        $scope.Lines[i].Debit = 0;
+                    }
+                }
+            },
+            true);
+
         $scope.TotalsLine = {
             DebitSum: 0,
             CreditSum: 0
+        };
+
+        $scope.HasErrors = false;
+        $scope.FormErrors = [];
+
+        $scope.validate = function() {
+            $scope.HasErrors = false;
+            $scope.FormErrors = [];
+            for (var i = 0; i < $scope.Lines.length; i++) {
+
+                var line = $scope.Lines[i];
+                if (!existsAccount(line.Account)) {
+                    $scope.HasErrors = true;
+                    $scope.FormErrors.push("La cuenta " + line.Account + " no existe.");
+                }
+
+                if (line.Debit <= 0 && line.Credit <= 0) {
+                    $scope.HasErrors = true;
+                    $scope.FormErrors.push("La línea " +
+                        (i + 1) +
+                        " no tiene ningún valor ni en el debe ni en el haber.");
+                }
+            }
+        };
+
+        $scope.submit = function() {
+            $scope.validate();
+
+            if ($scope.HasErrors === true) return;
+
+            $http.post("/api/journalentries/create", $scope.Lines).then(function() {
+                    $window.location.href = "/journalentries";
+                },
+                function(response) {
+                    $scope.FormErrors = [];
+                    $scope.FormErrors.push("Hubo un error al procesar tu solicitud: " + response.status + " " + response.statusText);
+                });
+
         };
 
         $scope.addNewLine();

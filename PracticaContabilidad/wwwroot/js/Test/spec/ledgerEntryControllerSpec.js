@@ -173,12 +173,13 @@
 
                 it("Sets AccountName if exists, removes if it does not",
                     function() {
-                        $scope.Lines[0].Account = "420.2";
-                        $scope.fillAccount(0);
-                        expect($scope.AccountName[0]).toEqual("General kenobi");
-                        $scope.Lines[0].Account = "420.1";
-                        $scope.fillAccount(0);
-                        expect($scope.AccountName[0]).toEqual("");
+                        $scope.addNewLine();
+                        $scope.Lines[1].Account = "420.2";
+                        $scope.fillAccount(1);
+                        expect($scope.AccountName[1]).toEqual("General kenobi");
+                        $scope.Lines[1].Account = "420.1";
+                        $scope.fillAccount(1);
+                        expect($scope.AccountName[1]).toEqual("");
                     });
             });
 
@@ -196,6 +197,94 @@
                         expect($scope.Lines.length).toEqual(1);
                         $scope.addNewLine();
                         expect($scope.Lines.length).toEqual(2);
+                    });
+            });
+
+        describe("changing debit or credit",
+            function() {
+                var $scope, controller;
+
+                beforeEach(function() {
+                    $scope = $rootScope.$new();
+                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
+                });
+
+                it("Removes debit if credit entered and is different from 0",
+                    function() {
+                        $scope.Lines[0].Debit = 400.50;
+                        $scope.$digest();
+                        expect($scope.Lines[0].Debit).toEqual(400.50);
+                        $scope.Lines[0].Credit = 300;
+                        $scope.$digest();
+                        expect($scope.Lines[0].Credit).toEqual(300);
+                        expect($scope.Lines[0].Debit).toEqual(0);
+                    });
+
+                it("Does not allow negative numbers",
+                    function() {
+                        $scope.Lines[0].Debit = -200;
+                        $scope.$digest();
+                        expect($scope.Lines[0].Debit).toEqual(0);
+
+                        $scope.addNewLine();
+                        $scope.Lines[1].Credit = -0.5;
+                        $scope.$digest();
+                        expect($scope.Lines[1].Credit).toEqual(0);
+                    });
+            });
+
+        describe("error validation",
+            function() {
+                var $scope, controller;
+
+                beforeEach(function() {
+                    $scope = $rootScope.$new();
+                    controller = $controller("LedgerEntryController",
+                        {
+                            $scope: $scope,
+                            accountService: {
+                                Accounts: [
+                                    { code: "527000000", name: "General kenobi" },
+                                    { code: "420000001", name: "Hello there" }
+                                ]
+                            }
+                        });
+                });
+
+                it("If any account does not exist, do not validate",
+                    function() {
+                        $scope.addNewLine();
+                        $scope.Lines[0].Debit = 400;
+                        $scope.Lines[0].Account = "420000000";
+                        $scope.Lines[1].Credit = 400;
+                        $scope.Lines[1].Account = "527000000";
+                        $scope.validate();
+                        expect($scope.HasErrors).toEqual(true);
+                        expect($scope.FormErrors).toContain("La cuenta 420000000 no existe.");
+
+                        $scope.Lines[0].Account = "420000001";
+                        $scope.validate();
+                        expect($scope.HasErrors).toEqual(false);
+                        expect($scope.FormErrors.length).toEqual(0);
+                    });
+
+                it("If any line has no debit or credit, do not validate",
+                    function() {
+                        $scope.addNewLine();
+                        $scope.Lines[0].Debit = 400;
+                        $scope.Lines[0].Account = "420000001";
+                        $scope.Lines[1].Credit = 0;
+                        $scope.Lines[1].Account = "527000000";
+
+                        $scope.validate();
+                        expect($scope.HasErrors).toEqual(true);
+                        expect($scope.FormErrors)
+                            .toContain("La línea 2 no tiene ningún valor ni en el debe ni en el haber.");
+
+                        $scope.Lines[1].Credit = 400;
+                        $scope.validate();
+                        expect($scope.HasErrors).toEqual(false);
+                        expect($scope.FormErrors.length).toEqual(0);
                     });
             });
     });
