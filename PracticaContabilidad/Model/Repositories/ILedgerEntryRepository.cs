@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PracticaContabilidad.Model.Repositories
 {
@@ -14,5 +15,11 @@ namespace PracticaContabilidad.Model.Repositories
         /// <param name="debitEntry">the entry that debits an account</param>
         /// <param name="creditEntry">the entry that credits a different account</param>
         void InsertDebitCreditEntries(LedgerEntry debitEntry, LedgerEntry creditEntry);
+
+        /// <summary>
+        ///     Inserts a ledger entry (apunte contable) that credits or debits one account
+        /// </summary>
+        /// <param name="entry"></param>
+        void InsertEntries(IEnumerable<LedgerEntry> entry);
     }
 }

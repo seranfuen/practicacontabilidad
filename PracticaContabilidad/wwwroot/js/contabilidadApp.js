@@ -12,7 +12,7 @@ app.factory("accountService",
     });
 
 app.controller("LedgerEntryController",
-    function($scope, $http, accountService) {
+    function($scope, $http, $window, accountService) {
         // We add a new line (ledger entry, apunte contable)
 
         $scope.addNewLine = function() {
@@ -93,7 +93,8 @@ app.controller("LedgerEntryController",
                         $scope.Lines[i].Credit = 0;
                     }
 
-                    if (typeof oldValue[i] === 'undefined') continue;
+                    // Need to check if there was previously no line at the current index
+                    if (typeof oldValue[i] === "undefined") continue;
 
                     if (oldValue[i].Debit !== newValue[i].Debit && newValue[i].Debit !== 0) {
                         $scope.Lines[i].Credit = 0;
@@ -137,7 +138,7 @@ app.controller("LedgerEntryController",
 
             if ($scope.HasErrors === true) return;
 
-            $http.post("/api/journalentries/create", $scope.Lines).then(function() {
+            $http.post("/api/JournalEntries", $scope.Lines).then(function() {
                     $window.location.href = "/journalentries";
                 },
                 function(response) {

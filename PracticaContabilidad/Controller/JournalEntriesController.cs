@@ -31,7 +31,7 @@ namespace PracticaContabilidad.Controller
             });
         }
 
-        public ViewResult AddJournalEntry()
+        public ViewResult Add()
         {
             return View();
         }

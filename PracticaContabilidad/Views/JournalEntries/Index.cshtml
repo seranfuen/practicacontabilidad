@@ -7,7 +7,7 @@
 <h2>Asientos</h2>
 <div class="row mb-4">
     <div class="col-md-2">
-        <a class="btn btn-primary" asp-action="Create">Añadir</a>
+        <a class="btn btn-primary" asp-action="Add">Añadir</a>
     </div>
 </div>
 <div class="row mb-4">
@@ -30,15 +30,15 @@
                     <td>
                         <a asp-controller="Account" asp-action="Edit" asp-route-accountId="@entry.AccountId">@entry.Account.Code</a>
                     </td>
-                    <td title="@entry.Account.Name" class="text-right">@(entry.EntryValue > 0 ? entry.EntryValue.ToString("c") : null)</td>
-                    <td class="text-right">@(entry.EntryValue < 0 ? (-entry.EntryValue).ToString("c") : null)</td>
+                    <td title="@entry.Account.Name" class="text-right">@((entry.EntryValue > 0 ? entry.EntryValue : 0).ToString("c"))</td>
+                    <td class="text-right">@((entry.EntryValue < 0 ? -entry.EntryValue : 0).ToString("c"))</td>
                     <td>@entry.Remarks</td>
                 </tr>
             }
             <tr>
                 <td colspan="2"></td>
-                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Debit ?? 0).ToString("c")</td>
-                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Credit ?? 0).ToString("c")</td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Debit).ToString("c")</td>
+                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Credit).ToString("c")</td>
                 <td></td>
             </tr>
             </tbody>

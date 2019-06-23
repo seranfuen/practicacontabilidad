@@ -31,5 +31,10 @@ namespace PracticaContabilidad.Model.Repositories
 
             _context.SaveChanges();
         }
+
+        public Account GetAccountWithCode(string code)
+        {
+            return Accounts.SingleOrDefault(x => x.Code.Equals(code));
+        }
     }
 }

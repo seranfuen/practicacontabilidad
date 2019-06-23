@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PracticaContabilidad.Model.UnitOfWork;
 
@@ -19,11 +20,28 @@ namespace PracticaContabilidad.Model.Repositories
 
         public void InsertDebitCreditEntries(LedgerEntry debitEntry, LedgerEntry creditEntry)
         {
+            if (debitEntry == null) throw new ArgumentNullException(nameof(debitEntry));
+            if (creditEntry == null) throw new ArgumentNullException(nameof(creditEntry));
             var uof = _uofFactory.GetUnitOfWork(_context);
             uof.AddEntry(debitEntry);
             uof.AddEntry(creditEntry);
             uof.DebitAccount(debitEntry.AccountId, debitEntry.EntryValue);
             uof.CreditAccount(creditEntry.AccountId, -creditEntry.EntryValue);
+            _context.SaveChanges();
+        }
+
+        public void InsertEntries(IEnumerable<LedgerEntry> entries)
+        {
+            var uof = _uofFactory.GetUnitOfWork(_context);
+            foreach (var entry in entries)
+            {
+                uof.AddEntry(entry);
+                if (entry.Credit > 0)
+                    uof.CreditAccount(entry.AccountId, entry.Credit);
+                else
+                    uof.DebitAccount(entry.AccountId, entry.Debit);
+            }
+
             _context.SaveChanges();
         }
     }

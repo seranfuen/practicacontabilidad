@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
 using PracticaContabilidad.Model;
@@ -22,6 +23,7 @@ namespace PracticaContabilidadTests
         private ILedgerEntryUnitOfWork _uof;
         private ILedgerEntryUoWFactory _uofFactory;
         private ContabilidadDbContext _context;
+
 
         [Test]
         public void InsertDebitCreditEntries_uses_unit_of_work_with_all_operations()
@@ -47,6 +49,25 @@ namespace PracticaContabilidadTests
             _uof.Received(1).AddEntry(creditEntry);
             _uof.Received(1).CreditAccount(31, 1000);
             _uof.Received(1).DebitAccount(30, 1000);
+            _context.Received(1).SaveChanges();
+        }
+
+        [Test]
+        public void InsertEntries_does_all_operations()
+        {
+            var entityUnderTest = new LedgerEntryRepository(_context, _uofFactory);
+
+            entityUnderTest.InsertEntries(new List<LedgerEntry>
+            {
+                new LedgerEntry {AccountId = 1, EntryDate = DateTime.Now, EntryValue = 1000},
+                new LedgerEntry {AccountId = 2, EntryDate = DateTime.Now, EntryValue = -800},
+                new LedgerEntry {AccountId = 3, EntryDate = DateTime.Now, EntryValue = -200}
+            });
+
+            _uof.Received(3).AddEntry(Arg.Any<LedgerEntry>());
+            _uof.Received(1).DebitAccount(1, 1000);
+            _uof.Received(1).CreditAccount(2, 800);
+            _uof.Received(1).CreditAccount(3, 200);
             _context.Received(1).SaveChanges();
         }
     }

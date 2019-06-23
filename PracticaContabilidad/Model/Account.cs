@@ -22,9 +22,8 @@ namespace PracticaContabilidad.Model
         ///     420.100  is transformed to 420000100
         /// </summary>
         [Required]
-        [MinLength(1)]
-        [MaxLength(11)]
-        [RegularExpression("^[0-9]+.[0-9]+$")]
+        [MinLength(9)]
+        [MaxLength(9)]
         [Display(Name = "Código")]
         public string Code { get; set; }
 

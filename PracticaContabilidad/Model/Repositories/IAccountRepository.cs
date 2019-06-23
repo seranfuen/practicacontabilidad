@@ -6,5 +6,6 @@ namespace PracticaContabilidad.Model.Repositories
     {
         IQueryable<Account> Accounts { get; }
         void Save(Account account);
+        Account GetAccountWithCode(string code);
     }
 }
