@@ -27,11 +27,11 @@ namespace PracticaContabilidadTests
                 new Account()
             }.AsQueryable());
 
-            _journalRepository = Substitute.For<ILedgerEntryRepository>();
+            _journalGroupRepository = Substitute.For<IJournalEntryGroupRepository>();
         }
 
         private IAccountRepository _repository;
-        private ILedgerEntryRepository _journalRepository;
+        private IJournalEntryGroupRepository _journalGroupRepository;
 
         private static bool IsExpectedCredit(LedgerEntry ledgerEntry)
         {
@@ -53,7 +53,7 @@ namespace PracticaContabilidadTests
 
         private JournalEntriesController InitializeEntityUnderTest()
         {
-            return new JournalEntriesController(_repository, _journalRepository);
+            return new JournalEntriesController(_repository, _journalGroupRepository);
         }
 
         private static InsertJournalEntryViewModel GetTestViewModel()
@@ -85,7 +85,7 @@ namespace PracticaContabilidadTests
             insertJournalEntryViewModel.EntryAmount = 0;
             entityUnderTest.Edit(insertJournalEntryViewModel);
             entityUnderTest.ModelState.IsValid.Should().BeFalse();
-            _journalRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
+            _journalGroupRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace PracticaContabilidadTests
             insertJournalEntryViewModel.DebitAccountId = insertJournalEntryViewModel.CreditAccountId = 2;
             entityUnderTest.Edit(insertJournalEntryViewModel);
             entityUnderTest.ModelState.IsValid.Should().BeFalse();
-            _journalRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
+            _journalGroupRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace PracticaContabilidadTests
         {
             var entityUnderTest = InitializeEntityUnderTest();
             entityUnderTest.ModelState.AddModelError("", "Error");
-            _journalRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
+            _journalGroupRepository.DidNotReceive().InsertDebitCreditEntries(Arg.Any<LedgerEntry>(), Arg.Any<LedgerEntry>());
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace PracticaContabilidadTests
         {
             var entityUnderTest = InitializeEntityUnderTest();
             entityUnderTest.Edit(GetTestViewModel());
-            _journalRepository.Received(1).InsertDebitCreditEntries(Arg.Is<LedgerEntry>(e1 => IsExpectedDebit(e1)),
+            _journalGroupRepository.Received(1).InsertDebitCreditEntries(Arg.Is<LedgerEntry>(e1 => IsExpectedDebit(e1)),
                 Arg.Is<LedgerEntry>(e2 => IsExpectedCredit(e2)));
         }
     }

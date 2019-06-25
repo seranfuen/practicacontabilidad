@@ -23,26 +23,29 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var entry in Model.JournalEntries)
+            @foreach (var entryGroup in Model.LedgerEntryGroups)
             {
-                <tr>
-                    <td>@entry.EntryDate.ToShortDateString()</td>
-                    <td>
-                        <a asp-controller="Account" asp-action="Edit" asp-route-accountId="@entry.AccountId">@entry.Account.Code</a>
-                    </td>
-                    <td title="@entry.Account.Name" class="text-right">@((entry.EntryValue > 0 ? entry.EntryValue : 0).ToString("c"))</td>
-                    <td class="text-right">@((entry.EntryValue < 0 ? -entry.EntryValue : 0).ToString("c"))</td>
-                    <td>@entry.Remarks</td>
-                </tr>
+                @foreach (var entry in entryGroup.LedgerEntries)
+                 {
+                     <tr>
+                         <td>@entryGroup.Date.ToShortDateString()</td>
+                         <td>
+                             <a asp-controller="Account" asp-action="Edit" asp-route-accountId="@entry.AccountId">@entry.Account.Code</a>
+                         </td>
+                         <td title="@entry.Account.Name" class="text-right">@((entry.EntryValue > 0 ? entry.EntryValue : 0).ToString("c"))</td>
+                         <td class="text-right">@((entry.EntryValue < 0 ? -entry.EntryValue : 0).ToString("c"))</td>
+                         <td>@entry.Remarks</td>
+                     </tr>
+                 }
             }
             <tr>
                 <td colspan="2"></td>
-                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Debit).ToString("c")</td>
-                <td class="text-right">@Model.JournalEntries.Sum(entry => entry.Credit).ToString("c")</td>
+                <td class="text-right">@Model.SumDebit.ToString("c")</td>
+                <td class="text-right">@Model.SumCredit.ToString("c")</td>
                 <td></td>
             </tr>
             </tbody>
         </table>
     </div>
-    <pagination action="Index" controller="JournalEntries" pagination="@Model.Pagination"></pagination>
+    <pagination action="Index" controller="LedgerEntryGroups" pagination="@Model.Pagination"></pagination>
 </div>

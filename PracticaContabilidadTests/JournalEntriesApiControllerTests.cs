@@ -30,7 +30,7 @@ namespace PracticaContabilidadTests
                 Code = "527000000"
             });
 
-            _ledgerEntryRepository = Substitute.For<ILedgerEntryRepository>();
+            _journalEntryGroupRepository = Substitute.For<IJournalEntryGroupRepository>();
         }
 
         private static bool ExpectedDebit(IEnumerable<LedgerEntry> entries)
@@ -58,12 +58,12 @@ namespace PracticaContabilidadTests
         }
 
         private IAccountRepository _accountRepository;
-        private ILedgerEntryRepository _ledgerEntryRepository;
+        private IJournalEntryGroupRepository _journalEntryGroupRepository;
 
         [Test]
         public void Post_calls_ledger_repository_with_entries()
         {
-            var entityUnderTest = new JournalEntriesController(_ledgerEntryRepository, _accountRepository);
+            var entityUnderTest = new JournalEntriesController(_journalEntryGroupRepository, _accountRepository);
             var result = entityUnderTest.Post(new List<JournalEntryViewModel>
             {
                 new JournalEntryViewModel {Account = "420000000", Credit = 1000, Remarks = "HELLO THERE"},
@@ -72,14 +72,14 @@ namespace PracticaContabilidadTests
 
             result.Should().BeOfType<OkResult>();
 
-            _ledgerEntryRepository.Received(1).InsertEntries(Arg.Is<IEnumerable<LedgerEntry>>(x => ExpectedCredit(x)));
-            _ledgerEntryRepository.Received(1).InsertEntries(Arg.Is<IEnumerable<LedgerEntry>>(x => ExpectedDebit(x)));
+            _journalEntryGroupRepository.Received(1).InsertEntries(Arg.Is<IEnumerable<LedgerEntry>>(x => ExpectedCredit(x)));
+            _journalEntryGroupRepository.Received(1).InsertEntries(Arg.Is<IEnumerable<LedgerEntry>>(x => ExpectedDebit(x)));
         }
 
         [Test]
         public void Post_calls_with_not_existent_account_fails()
         {
-            var entityUnderTest = new JournalEntriesController(_ledgerEntryRepository, _accountRepository);
+            var entityUnderTest = new JournalEntriesController(_journalEntryGroupRepository, _accountRepository);
             var result = entityUnderTest.Post(new List<JournalEntryViewModel>
             {
                 new JournalEntryViewModel {Account = "420000000", Credit = 1000, Remarks = "HELLO THERE"},
@@ -87,7 +87,7 @@ namespace PracticaContabilidadTests
             });
 
             result.Should().BeOfType<BadRequestObjectResult>();
-            _ledgerEntryRepository.DidNotReceive().InsertEntries(Arg.Any<IEnumerable<LedgerEntry>>());
+            _journalEntryGroupRepository.DidNotReceive().InsertEntries(Arg.Any<IEnumerable<LedgerEntry>>());
         }
     }
 }

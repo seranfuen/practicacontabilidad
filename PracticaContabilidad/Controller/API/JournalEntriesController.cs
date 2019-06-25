@@ -12,13 +12,13 @@ namespace PracticaContabilidad.Controller.API
     public class JournalEntriesController : ControllerBase
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly ILedgerEntryRepository _ledgerEntryRepository;
+        private readonly IJournalEntryGroupRepository _journalEntryGroupRepository;
 
-        public JournalEntriesController(ILedgerEntryRepository ledgerEntryRepository,
+        public JournalEntriesController(IJournalEntryGroupRepository journalEntryGroupRepository,
             IAccountRepository accountRepository)
         {
-            _ledgerEntryRepository =
-                ledgerEntryRepository ?? throw new ArgumentNullException(nameof(ledgerEntryRepository));
+            _journalEntryGroupRepository =
+                journalEntryGroupRepository ?? throw new ArgumentNullException(nameof(journalEntryGroupRepository));
             _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
         }
 
@@ -30,7 +30,7 @@ namespace PracticaContabilidad.Controller.API
             if (ledgerEntries.Any(x => x.Account == null))
                 return BadRequest("One or more accounts do not exist");
 
-            _ledgerEntryRepository.InsertEntries(ledgerEntries);
+            _journalEntryGroupRepository.InsertEntries(ledgerEntries);
 
             return Ok();
         }

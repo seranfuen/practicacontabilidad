@@ -12,14 +12,14 @@ namespace PracticaContabilidad.Controller
     {
         private const int ItemsPerPage = 10;
         private readonly IAccountRepository _accountRepository;
-        private readonly ILedgerEntryRepository _ledgerEntryRepository;
+        private readonly IJournalEntryGroupRepository _journalEntryGroupRepository;
 
         public JournalEntriesController(IAccountRepository accountRepository,
-            ILedgerEntryRepository ledgerEntryRepository)
+            IJournalEntryGroupRepository journalEntryGroupRepository)
         {
             _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
-            _ledgerEntryRepository =
-                ledgerEntryRepository ?? throw new ArgumentNullException(nameof(ledgerEntryRepository));
+            _journalEntryGroupRepository =
+                journalEntryGroupRepository ?? throw new ArgumentNullException(nameof(journalEntryGroupRepository));
         }
 
         public IActionResult Create()
@@ -47,7 +47,7 @@ namespace PracticaContabilidad.Controller
                 return View("Edit", viewModel);
             }
 
-            _ledgerEntryRepository.InsertDebitCreditEntries(new LedgerEntry
+            _journalEntryGroupRepository.InsertDebitCreditEntries(new LedgerEntry
             {
                 AccountId = viewModel.DebitAccountId,
                 EntryDate = DateTime.Now,
@@ -66,11 +66,12 @@ namespace PracticaContabilidad.Controller
 
         public IActionResult Index(int page = 1)
         {
-            var journalEntries = _ledgerEntryRepository.LedgerEntries.AsNoTracking().Include(entry => entry.Account)
-                .OrderByDescending(entry => entry.EntryDate).Skip((page - 1) * ItemsPerPage).Take(ItemsPerPage);
+            var journalEntries = _journalEntryGroupRepository.JournalEntryGroups.AsNoTracking()
+                .Include(grp => grp.LedgerEntries).ThenInclude(entry => entry.Account)
+                .OrderByDescending(entry => entry.Date).Skip((page - 1) * ItemsPerPage).Take(ItemsPerPage);
             return View("Index",
                 new JournalEntriesViewModel(journalEntries,
-                    new Pagination(_ledgerEntryRepository.LedgerEntries.Count(), ItemsPerPage, page)));
+                    new Pagination(_journalEntryGroupRepository.JournalEntryGroups.Count(), ItemsPerPage, page)));
         }
 
         private IEnumerable<Account> GetAllAccounts()

@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace PracticaContabilidad.Model.Repositories
 {
-    public interface ILedgerEntryRepository
+    public interface IJournalEntryGroupRepository
     {
-        IQueryable<LedgerEntry> LedgerEntries { get; }
+        IQueryable<JournalEntryGroup> JournalEntryGroups { get; }
 
         /// <summary>
         ///     This is a very simple accounting entry where the same quantity that is debited to one

@@ -1,16 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace PracticaContabilidad.Model
 {
     public class JournalEntriesViewModel
     {
-        public JournalEntriesViewModel(IEnumerable<LedgerEntry> journalEntries, Pagination pagination)
+        public JournalEntriesViewModel(IEnumerable<JournalEntryGroup> ledgerEntryGroups, Pagination pagination)
         {
-            JournalEntries = journalEntries;
+            LedgerEntryGroups = ledgerEntryGroups;
             Pagination = pagination;
         }
 
-        public IEnumerable<LedgerEntry> JournalEntries { get; }
+        public IEnumerable<JournalEntryGroup> LedgerEntryGroups { get; }
         public Pagination Pagination { get; }
+
+        [NotMapped] public decimal SumDebit => LedgerEntryGroups.SelectMany(x => x.LedgerEntries).Sum(x => x.Debit);
+        [NotMapped] public decimal SumCredit => LedgerEntryGroups.SelectMany(x => x.LedgerEntries).Sum(x => x.Credit);
     }
 }

@@ -7,14 +7,21 @@ namespace PracticaContabilidad.Model.UnitOfWork
     {
         private readonly ContabilidadDbContext _context;
 
+        private readonly JournalEntryGroup _journalEntryGroup;
+
         public LedgerEntryUnitOfWork(ContabilidadDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _journalEntryGroup = new JournalEntryGroup
+            {
+                Date = DateTime.Now
+            };
+            _context.JournalEntryGroups.Add(_journalEntryGroup);
         }
 
         public void AddEntry(LedgerEntry entry)
         {
-            _context.LedgerEntries.Add(entry);
+            _journalEntryGroup.LedgerEntries.Add(entry);
         }
 
         public void CreditAccount(int accountId, decimal amount)

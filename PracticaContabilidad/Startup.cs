@@ -43,7 +43,7 @@ namespace PracticaContabilidad
                 builder.UseSqlServer(Configuration.GetConnectionString("ContabilidadConnection")));
             services.AddScoped<IContabilidadSeeder, DevelopmentContabilidadSeeder>();
             services.AddTransient<IAccountRepository, AccountRepository>();
-            services.AddTransient<ILedgerEntryRepository, LedgerEntryRepository>();
+            services.AddTransient<IJournalEntryGroupRepository, JournalEntryGroupRepository>();
             services.AddAutoMapper(cfg => { }, typeof(Startup));
             services.AddSingleton<ILedgerEntryUoWFactory, LedgerEntryUoWFactory>();
         }

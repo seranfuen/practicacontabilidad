@@ -28,7 +28,7 @@ namespace PracticaContabilidadTests
         [Test]
         public void InsertDebitCreditEntries_uses_unit_of_work_with_all_operations()
         {
-            var entityUnderTest = new LedgerEntryRepository(_context, _uofFactory);
+            var entityUnderTest = new JournalEntryGroupRepository(_context, _uofFactory);
             var debitEntry = new LedgerEntry
             {
                 AccountId = 30,
@@ -55,7 +55,7 @@ namespace PracticaContabilidadTests
         [Test]
         public void InsertEntries_does_all_operations()
         {
-            var entityUnderTest = new LedgerEntryRepository(_context, _uofFactory);
+            var entityUnderTest = new JournalEntryGroupRepository(_context, _uofFactory);
 
             entityUnderTest.InsertEntries(new List<LedgerEntry>
             {

@@ -143,9 +143,20 @@ app.controller("LedgerEntryController",
                 },
                 function(response) {
                     $scope.FormErrors = [];
-                    $scope.FormErrors.push("Hubo un error al procesar tu solicitud: " + response.status + " " + response.statusText);
+                    $scope.FormErrors.push("Hubo un error al procesar tu solicitud: " +
+                        response.status +
+                        " " +
+                        response.statusText);
                 });
 
+        };
+
+        $scope.copyRemarksFrom = function(index) {
+            var remarks = $scope.Lines[index].Remarks;
+
+            for (var i = 0; i < $scope.Lines.length; i++) {
+                $scope.Lines[i].Remarks = remarks;
+            }
         };
 
         $scope.addNewLine();

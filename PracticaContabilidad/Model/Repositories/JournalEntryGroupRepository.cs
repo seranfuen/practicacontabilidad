@@ -5,18 +5,18 @@ using PracticaContabilidad.Model.UnitOfWork;
 
 namespace PracticaContabilidad.Model.Repositories
 {
-    public class LedgerEntryRepository : ILedgerEntryRepository
+    public class JournalEntryGroupRepository : IJournalEntryGroupRepository
     {
         private readonly ContabilidadDbContext _context;
         private readonly ILedgerEntryUoWFactory _uofFactory;
 
-        public LedgerEntryRepository(ContabilidadDbContext context, ILedgerEntryUoWFactory uofFactory)
+        public JournalEntryGroupRepository(ContabilidadDbContext context, ILedgerEntryUoWFactory uofFactory)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _uofFactory = uofFactory ?? throw new ArgumentNullException(nameof(uofFactory));
         }
 
-        public IQueryable<LedgerEntry> LedgerEntries => _context.LedgerEntries;
+        public IQueryable<JournalEntryGroup> JournalEntryGroups => _context.JournalEntryGroups;
 
         public void InsertDebitCreditEntries(LedgerEntry debitEntry, LedgerEntry creditEntry)
         {

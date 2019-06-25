@@ -23,6 +23,7 @@
                         <td>Debe</td>
                         <td>Haber</td>
                         <td>Referencia</td>
+                        <td></td>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,15 +42,17 @@
                         <td>
                             <input type="text" size="40" ng-model="line.Remarks"/>
                         </td>
+                        <td>
+                            <span ng-click="copyRemarksFrom($index)" class="letter-icon">C</span>
+                        </td>
                     </tr>
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td colspan="2"></td>
                         <td>{{TotalsLine.DebitSum}}</td>
                         <td>{{TotalsLine.CreditSum}}</td>
-                        <td></td>
+                        <td colspan="2"></td>
                     </tr>
                     </tfoot>
                 </table>

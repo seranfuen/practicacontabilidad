@@ -23,6 +23,29 @@
                     function() {
                         expect($scope.Lines.length).toEqual(1);
                     });
+
+                it("Copy remarks copies the remarks of the selected line to all the other lines",
+                    function() {
+                        $scope.addNewLine();
+                        $scope.addNewLine();
+                        $scope.Lines[2].Remarks = "HELLO THERE";
+                        expect($scope.Lines[0].Remarks).not.toBeDefined();
+                        expect($scope.Lines[1].Remarks).not.toBeDefined();
+                        $scope.copyRemarksFrom(2);
+                        expect($scope.Lines[0].Remarks).toEqual("HELLO THERE");
+                        expect($scope.Lines[1].Remarks).toEqual("HELLO THERE");
+                    });
+
+                it("Copy remarks from empty empties the other lines",
+                    function () {
+                        $scope.addNewLine();
+                        $scope.addNewLine();
+                        $scope.Lines[2].Remarks = "HELLO THERE";
+                        expect($scope.Lines[0].Remarks).not.toBeDefined();
+                        expect($scope.Lines[1].Remarks).not.toBeDefined();
+                        $scope.copyRemarksFrom(1);
+                        expect($scope.Lines[2].Remarks).not.toBeDefined();
+                    });
             });
 
         describe("UpdateTotals",
