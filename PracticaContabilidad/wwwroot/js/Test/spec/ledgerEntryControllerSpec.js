@@ -37,7 +37,7 @@
                     });
 
                 it("Copy remarks from empty empties the other lines",
-                    function () {
+                    function() {
                         $scope.addNewLine();
                         $scope.addNewLine();
                         $scope.Lines[2].Remarks = "HELLO THERE";
@@ -229,7 +229,9 @@
 
                 beforeEach(function() {
                     $scope = $rootScope.$new();
-                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
+
+                    controller = $controller("LedgerEntryController",
+                        { $scope: $scope, accountService: { Accounts: [] } });
                 });
 
                 it("Removes debit if credit entered and is different from 0",
@@ -253,6 +255,54 @@
                         $scope.Lines[1].Credit = -0.5;
                         $scope.$digest();
                         expect($scope.Lines[1].Credit).toEqual(0);
+                    });
+            });
+
+        describe("searchAccounts",
+            function() {
+
+                var $scope, controller;
+
+                beforeEach(function() {
+
+
+                    var accountService = {
+                        Accounts: [
+                            { code: "420000002", name: "General kenobi" }, { code: "4600000001", name: "Another" },
+                            { code: "420000003", name: "Yet another" }
+                        ]
+                    };
+
+                    $scope = $rootScope.$new();
+                    controller = $controller("LedgerEntryController", { $scope: $scope, accountService });
+                });
+
+                it("Empty or null string returns nothing",
+                    function() {
+                        $scope.searchAccounts("");
+                        expect($scope.filteredAccounts.length).toEqual(0);
+                    });
+
+                it("Not matching with name or code returns nothing",
+                    function() {
+                        $scope.searchAccounts("");
+                        expect($scope.filteredAccounts.length).toEqual(0);
+                    });
+
+                it("Matching code returns accounts",
+                    function() {
+                        $scope.searchAccounts("420000");
+                        expect($scope.filteredAccounts.length).toEqual(2);
+                        expect($scope.filteredAccounts).toContain({ code: "420000002", name: "General kenobi" });
+                        expect($scope.filteredAccounts).toContain({ code: "420000003", name: "Yet another" });
+                    });
+
+                it("Matching name returns accounts",
+                    function () {
+                        $scope.searchAccounts("another");
+                        expect($scope.filteredAccounts.length).toEqual(2);
+                        expect($scope.filteredAccounts).toContain({ code: "4600000001", name: "Another" });
+                        expect($scope.filteredAccounts).toContain({ code: "420000003", name: "Yet another" });
                     });
             });
 
@@ -309,5 +359,6 @@
                         expect($scope.HasErrors).toEqual(false);
                         expect($scope.FormErrors.length).toEqual(0);
                     });
+
             });
     });

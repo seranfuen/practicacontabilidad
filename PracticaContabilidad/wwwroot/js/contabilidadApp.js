@@ -47,6 +47,12 @@ app.controller("LedgerEntryController",
             });
         }
 
+        $scope.onAccountSearchChanged = function() {
+            $scope.searchAccounts($scope.searchTerm);
+        };
+
+        $scope.searchTerm = "";
+
         // Make a short account code have 9 digits exactly
         // If no dot is present, right pad with zeros
         // If present, left pad up to the digits after the dot
@@ -82,6 +88,20 @@ app.controller("LedgerEntryController",
         };
 
         $scope.Lines = [];
+
+        $scope.filteredAccounts = [];
+
+        $scope.searchAccounts = function(searchTerm) {
+            if (!searchTerm) {
+                $scope.filteredAccounts = [];
+            } else {
+                var termInLowerCase = searchTerm.toLowerCase();
+                $scope.filteredAccounts = accountService.Accounts.filter(function(account) {
+                    return account.code.includes(termInLowerCase) ||
+                        account.name.toLowerCase().includes(termInLowerCase);
+                });
+            }
+        };
 
         $scope.$watch("Lines",
             function(newValue, oldValue) {
