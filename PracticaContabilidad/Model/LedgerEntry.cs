@@ -20,5 +20,5 @@ namespace PracticaContabilidad.Model
         [MaxLength(1000)] public string Remarks { get; set; }
 
         [Required] public int AccountId { get; set; }
-    }
+            }
 }

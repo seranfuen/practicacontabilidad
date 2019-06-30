@@ -171,12 +171,24 @@ app.controller("LedgerEntryController",
 
         };
 
+        $scope.onLastLineKeyPress = function(event) {
+            if (event.keyCode !== 9 && event.keyCode !== 13)
+                return;
+
+            addNewLine();
+        };
+
         $scope.copyRemarksFrom = function(index) {
             var remarks = $scope.Lines[index].Remarks;
 
             for (var i = 0; i < $scope.Lines.length; i++) {
                 $scope.Lines[i].Remarks = remarks;
             }
+        };
+
+        $scope.removeLine = function(index) {
+            if ($scope.Lines.length <= 1) return;
+            $scope.Lines.splice(index, 1);
         };
 
         $scope.addNewLine();

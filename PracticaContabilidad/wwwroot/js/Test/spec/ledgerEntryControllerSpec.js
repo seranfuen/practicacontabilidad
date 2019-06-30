@@ -109,6 +109,34 @@
 
             });
 
+        describe("removeLine",
+            function() {
+                var $scope, controller;
+
+                beforeEach(function () {
+                    $scope = $rootScope.$new();
+                    controller =
+                        $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
+                });
+
+                it("Remove when only one line does not remove anything",
+                    function() {
+                        expect($scope.Lines.length).toEqual(1);
+                        $scope.removeLine(0);
+                        expect($scope.Lines.length).toEqual(1);
+                    });
+
+                it("Remove when two lines, removes the correct line", function() {
+                    $scope.Lines[0].Account = "320";
+                    $scope.addNewLine();
+                    $scope.Lines[1].Account = "400";
+                    expect($scope.Lines.length).toEqual(2);
+                    $scope.removeLine(0);
+                    expect($scope.Lines.length).toEqual(1);
+                    expect($scope.Lines[0].Account).toEqual("400");
+                })
+            });
+
         describe("fillAccount",
             function() {
 

@@ -36,5 +36,10 @@ namespace PracticaContabilidad.Model.Repositories
         {
             return Accounts.SingleOrDefault(x => x.Code.Equals(code));
         }
+
+        public Account GetAccount(int accountId)
+        {
+            return Accounts.SingleOrDefault(x => x.AccountId == accountId);
+        }
     }
 }

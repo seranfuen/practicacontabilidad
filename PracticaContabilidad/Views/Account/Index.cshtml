@@ -28,7 +28,9 @@
             @foreach (var account in Model)
             {
                 <tr>
-                    <td>@account.Code</td>
+                    <td>
+                        <a asp-action="Show" asp-route-accountID="@account.AccountId">@account.Code</a>
+                    </td>
                     <td>@account.Name</td>
                     <td>@account.Description</td>
                     <td class="text-right">

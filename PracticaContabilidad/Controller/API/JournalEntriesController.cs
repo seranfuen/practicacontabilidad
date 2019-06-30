@@ -37,9 +37,11 @@ namespace PracticaContabilidad.Controller.API
 
         private LedgerEntry ToLedgerEntry(JournalEntryViewModel entry)
         {
+            var accountWithCode = _accountRepository.GetAccountWithCode(entry.Account);
             return new LedgerEntry
             {
-                Account = _accountRepository.GetAccountWithCode(entry.Account),
+                AccountId = accountWithCode.AccountId,
+                Account = accountWithCode,
                 EntryValue = entry.Credit > 0 ? -entry.Credit : entry.Debit,
                 EntryDate = DateTime.Now,
                 Remarks = entry.Remarks

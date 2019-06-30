@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PracticaContabilidad.Model
@@ -22,7 +21,7 @@ namespace PracticaContabilidad.Model
         ///     420.100  is transformed to 420000100
         /// </summary>
         [Required]
-        [MinLength(9)]
+        [MinLength(1)]
         [MaxLength(9)]
         [Display(Name = "Código")]
         public string Code { get; set; }
@@ -43,7 +42,5 @@ namespace PracticaContabilidad.Model
         [Display(Name = "Haber")] [Required] public decimal Credit { get; set; }
 
         [Display(Name = "Saldo")] [NotMapped] public decimal Balance => Debit - Credit;
-
-        private ICollection<LedgerEntry> LedgerEntries { get; set; }
     }
 }

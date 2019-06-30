@@ -8,3 +8,13 @@
     padding: 0 5px;
     cursor: pointer;
 }
+
+.letter-icon-sm {
+    font-size: 0.7em;
+    background-color: orangered;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px 5px;
+    cursor: pointer;
+}

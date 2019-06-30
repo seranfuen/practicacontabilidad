@@ -15,6 +15,7 @@
         <table class="table table-sm table-striped table-bordered">
             <thead>
             <tr>
+                <th>Número</th>
                 <th>Fecha</th>
                 <th>Cuenta</th>
                 <th class="text-center">Debe</th>
@@ -28,6 +29,7 @@
                 @foreach (var entry in entryGroup.LedgerEntries)
                  {
                      <tr>
+                         <td><a asp-action="View" asp-route-journalEntryGroupId="@entryGroup.JournalEntryGroupId">@entryGroup.JournalEntryGroupId</a></td>
                          <td>@entryGroup.Date.ToShortDateString()</td>
                          <td>
                              <a asp-controller="Account" asp-action="Edit" asp-route-accountId="@entry.AccountId">@entry.Account.Code</a>

@@ -1,0 +1,42 @@
+﻿@model  PracticaContabilidad.Model.JournalEntryGroup
+@{
+    ViewData["Title"] = $"Asiento #{Model.JournalEntryGroupId}";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Asiento @($"#{Model.JournalEntryGroupId}")</h2>
+<p>
+    <span class="font-weight-bold">Fecha: </span><span>@Model.Date.ToShortDateString()</span>
+</p>
+<h3>Apuntes</h3>
+<table class="table table-responsive-sm table-striped">
+    <thead>
+    <tr>
+        <th>Código de cuenta</th>
+        <th>Cuenta</th>
+        <th>Debe</th>
+        <th>Haber</th>
+        <th>Referencia</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var entry in Model.LedgerEntries)
+    {
+        <tr>
+            <td>@entry.Account.Code</td>
+            <td>@entry.Account.Name</td>
+            <td>@entry.Debit.ToString("c")</td>
+            <td>@entry.Credit.ToString("c")</td>
+            <td>@entry.Remarks</td>
+        </tr>
+    }
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2"></td>
+        <td>@Model.LedgerEntries.Sum(x => x.Debit).ToString("c")</td>
+        <td>@Model.LedgerEntries.Sum(x => x.Credit).ToString("c")</td>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>

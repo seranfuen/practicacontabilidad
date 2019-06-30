@@ -1,0 +1,35 @@
+﻿@model PracticaContabilidad.Model.AccountViewModel
+@{
+    ViewData["Title"] = ViewBag.Title;
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Cuenta @Model.Code</h2>
+<h3>@Model.Name</h3>
+
+<p>
+    <span class="font-weight-bold">Descripción: </span><span>@Model.Description</span>
+</p>
+<p>Balance: @(Model.Balance.ToString("c"))</p>
+
+<table class="table table-responsive-sm table-striped">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>Referencia</th>
+        <th>Debe</th>
+        <th>Haber</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var entry in Model.Entries)
+    {
+        <tr>
+            <td><a asp-action="View" asp-controller="JournalEntries">@entry.EntryDate.ToShortDateString()</a></td>
+            <td>@entry.Remarks</td>
+            <td>@entry.Debit.ToString("c")</td>
+            <td>@entry.Credit.ToString("c")</td>
+        </tr>
+    }
+    </tbody>
+</table>

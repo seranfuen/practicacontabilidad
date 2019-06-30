@@ -44,5 +44,11 @@ namespace PracticaContabilidad.Model.Repositories
 
             _context.SaveChanges();
         }
+
+        public IEnumerable<LedgerEntry> GetLastEntriesForAccount(int accountId, int count)
+        {
+            return _context.JournalEntryGroups.SelectMany(x => x.LedgerEntries).Where(x => x.AccountId == accountId)
+                .OrderByDescending(x => x.EntryDate).Take(count).ToList();
+        }
     }
 }

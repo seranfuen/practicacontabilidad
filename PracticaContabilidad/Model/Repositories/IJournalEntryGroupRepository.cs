@@ -21,5 +21,7 @@ namespace PracticaContabilidad.Model.Repositories
         /// </summary>
         /// <param name="entry"></param>
         void InsertEntries(IEnumerable<LedgerEntry> entry);
+
+        IEnumerable<LedgerEntry> GetLastEntriesForAccount(int accountId, int count);
     }
 }

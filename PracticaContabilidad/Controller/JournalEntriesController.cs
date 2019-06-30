@@ -64,6 +64,15 @@ namespace PracticaContabilidad.Controller
             return Index();
         }
 
+        public IActionResult View(int journalEntryGroupId)
+        {
+            var entry = _journalEntryGroupRepository.JournalEntryGroups
+                .Include(x => x.LedgerEntries).ThenInclude(x => x.Account)
+                .SingleOrDefault(x => x.JournalEntryGroupId == journalEntryGroupId);
+
+            return View(entry);
+        }
+
         public IActionResult Index(int page = 1)
         {
             var journalEntries = _journalEntryGroupRepository.JournalEntryGroups.AsNoTracking()

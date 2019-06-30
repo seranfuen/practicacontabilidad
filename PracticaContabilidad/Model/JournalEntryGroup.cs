@@ -9,6 +9,6 @@ namespace PracticaContabilidad.Model
         public int JournalEntryGroupId { get; set; }
         public DateTime Date { get; set; }
 
-        public ICollection<LedgerEntry> LedgerEntries { get; set; }
+        public ICollection<LedgerEntry> LedgerEntries { get; set; } = new List<LedgerEntry>();
     }
 }
