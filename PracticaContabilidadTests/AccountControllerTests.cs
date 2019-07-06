@@ -13,6 +13,7 @@ namespace PracticaContabilidadTests
     public class AccountControllerTests
     {
         private IAccountRepository _accountRepository;
+        private IJournalEntryGroupRepository _journalRepository;
 
         [TestCase("420", "420000000")]
         [TestCase("420.1", "420000001")]
@@ -21,7 +22,7 @@ namespace PracticaContabilidadTests
         public void Edit_calls_repository_to_save_account_setting_correct_code(string codeFromUser,
             string expectedCodeToPersist)
         {
-            var entityUnderTest = new AccountController(_accountRepository);
+            var entityUnderTest = new AccountController(_accountRepository, _journalRepository);
             entityUnderTest.Edit(new Account {Code = codeFromUser, Name = "Test"});
             _accountRepository.Received(1).Save(Arg.Is<Account>(acc => acc.Code == expectedCodeToPersist));
         }
@@ -29,7 +30,7 @@ namespace PracticaContabilidadTests
         [Test]
         public void Edit_with_wrong_code_sets_model_error_does_not_persist()
         {
-            var entityUnderTest = new AccountController(_accountRepository);
+            var entityUnderTest = new AccountController(_accountRepository, _journalRepository);
             entityUnderTest.Edit(new Account {Code = "ABC", Name = "Test"});
 
             entityUnderTest.ModelState.IsValid.Should().BeFalse();
@@ -39,15 +40,15 @@ namespace PracticaContabilidadTests
         [Test]
         public void Edit_with_existing_account_does_not_replace_code()
         {
-            var entityUnderTest = new AccountController(_accountRepository);
-            entityUnderTest.Edit(new Account { AccountId = 80, Code = "420", Name = "Test" });
+            var entityUnderTest = new AccountController(_accountRepository, _journalRepository);
+            entityUnderTest.Edit(new Account {AccountId = 80, Code = "420", Name = "Test"});
             _accountRepository.Received(1).Save(Arg.Is<Account>(acc => acc.Code == "420"));
         }
 
         [Test]
         public void Index_returns_all_accounts_sorted_by_code()
         {
-            var entityUnderTest = new AccountController(_accountRepository);
+            var entityUnderTest = new AccountController(_accountRepository, _journalRepository);
             var result = (ViewResult) entityUnderTest.Index();
             var accounts = ((IEnumerable<Account>) result.Model).ToList();
 
@@ -67,6 +68,8 @@ namespace PracticaContabilidadTests
                 new Account {Code = "300"},
                 new Account {Code = "100"}
             }.AsQueryable());
+
+            _journalRepository = Substitute.For<IJournalEntryGroupRepository>();
         }
     }
 }

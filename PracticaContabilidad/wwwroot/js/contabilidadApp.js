@@ -2,7 +2,24 @@
 
 app.factory("accountService",
     function($http) {
-        var result = { Accounts: [] };
+
+        var result = {
+            Accounts: [],
+            CreateAccount: function(code, name, description, promiseSuccess, promiseFailure) {
+                $http.post("/api/account",
+                    {
+                        code: code,
+                        name: name,
+                        description: description
+                    }).then(function(response) {
+                        result.Accounts.push(response.data);
+                        promiseSuccess();
+                    },
+                    function() {
+                        promiseFailure(code);
+                    });
+            }
+        };
 
         $http.get("/api/account").then(function(response) {
             result.Accounts = response.data;
@@ -189,6 +206,28 @@ app.controller("LedgerEntryController",
         $scope.removeLine = function(index) {
             if ($scope.Lines.length <= 1) return;
             $scope.Lines.splice(index, 1);
+        };
+
+        $scope.startNewAccountCreation = function(code) {
+            $scope.NewAccount = {
+                Code: code,
+                Name: "",
+                Description: ""
+            };
+        };
+
+        $scope.commitNewAccount = function() {
+            var newAccount = $scope.NewAccount;
+            accountService.CreateAccount(newAccount.Code,
+                newAccount.Name,
+                newAccount.Description,
+                function() {
+                    for (var i = 0; i < $scope.Lines.length; i++)
+                        $scope.fillAccount(i);
+                },
+                function(code) {
+                    $scope.ErrorMessage = "Ha ocurrido un error al intentar guardar la cuenta " + code;
+                });
         };
 
         $scope.addNewLine();

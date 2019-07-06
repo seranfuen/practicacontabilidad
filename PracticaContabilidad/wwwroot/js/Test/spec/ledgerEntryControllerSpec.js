@@ -113,7 +113,7 @@
             function() {
                 var $scope, controller;
 
-                beforeEach(function () {
+                beforeEach(function() {
                     $scope = $rootScope.$new();
                     controller =
                         $controller("LedgerEntryController", { $scope: $scope, accountService: {} });
@@ -126,15 +126,16 @@
                         expect($scope.Lines.length).toEqual(1);
                     });
 
-                it("Remove when two lines, removes the correct line", function() {
-                    $scope.Lines[0].Account = "320";
-                    $scope.addNewLine();
-                    $scope.Lines[1].Account = "400";
-                    expect($scope.Lines.length).toEqual(2);
-                    $scope.removeLine(0);
-                    expect($scope.Lines.length).toEqual(1);
-                    expect($scope.Lines[0].Account).toEqual("400");
-                })
+                it("Remove when two lines, removes the correct line",
+                    function() {
+                        $scope.Lines[0].Account = "320";
+                        $scope.addNewLine();
+                        $scope.Lines[1].Account = "400";
+                        expect($scope.Lines.length).toEqual(2);
+                        $scope.removeLine(0);
+                        expect($scope.Lines.length).toEqual(1);
+                        expect($scope.Lines[0].Account).toEqual("400");
+                    });
             });
 
         describe("fillAccount",
@@ -326,7 +327,7 @@
                     });
 
                 it("Matching name returns accounts",
-                    function () {
+                    function() {
                         $scope.searchAccounts("another");
                         expect($scope.filteredAccounts.length).toEqual(2);
                         expect($scope.filteredAccounts).toContain({ code: "4600000001", name: "Another" });
@@ -388,5 +389,44 @@
                         expect($scope.FormErrors.length).toEqual(0);
                     });
 
+            });
+
+        describe("startNewAccountCreation",
+            function() {
+                var $scope, controller, accountService;
+
+                beforeEach(function() {
+                    $scope = $rootScope.$new();
+
+                    accountService = {
+                        Accounts: [], CreateAccount: function (code, name, description) {}  };
+                    controller = $controller("LedgerEntryController",
+                        { $scope: $scope, accountService: accountService });
+                    spyOn(accountService, "CreateAccount");
+                });
+
+                it("Sets code to the one provided, leaves rest of fields empty",
+                    function() {
+                        $scope.startNewAccountCreation("420000000");
+                        expect($scope.NewAccount.Code).toEqual("420000000");
+                        expect($scope.NewAccount.Name).toEqual("");
+                        expect($scope.NewAccount.Description).toEqual("");
+
+                        $scope.NewAccount.Name = "TEST";
+                        expect($scope.NewAccount.Name).toEqual("TEST");
+
+                        $scope.startNewAccountCreation("450000000");
+                        expect($scope.NewAccount.Code).toEqual("450000000");
+                        expect($scope.NewAccount.Name).toEqual("");
+                        expect($scope.NewAccount.Description).toEqual("");
+                    });
+
+                it("Sends data when calling commitNewAccount", function() {
+                    $scope.startNewAccountCreation("420000000");
+                    $scope.NewAccount.Name = "Kenobi";
+                    $scope.NewAccount.Description = "Hello";
+                    $scope.commitNewAccount();
+                    expect(accountService.CreateAccount).toHaveBeenCalledWith("420000000", "Kenobi", "Hello");
+                });
             });
     });

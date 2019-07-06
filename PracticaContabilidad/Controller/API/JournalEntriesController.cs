@@ -40,7 +40,7 @@ namespace PracticaContabilidad.Controller.API
             var accountWithCode = _accountRepository.GetAccountWithCode(entry.Account);
             return new LedgerEntry
             {
-                AccountId = accountWithCode.AccountId,
+                AccountId = accountWithCode?.AccountId ?? 0,
                 Account = accountWithCode,
                 EntryValue = entry.Credit > 0 ? -entry.Credit : entry.Debit,
                 EntryDate = DateTime.Now,
