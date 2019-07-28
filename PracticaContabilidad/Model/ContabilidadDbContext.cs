@@ -10,9 +10,12 @@ namespace PracticaContabilidad.Model
         }
         public ContabilidadDbContext(DbContextOptions options) : base(options)
         {
+            
         }
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<JournalEntryGroup> JournalEntryGroups { get; set; }
+
+        public DbSet<JournalEntryGroupPreset> JournalEntryGroupPresets { get; set; }
     }
 }

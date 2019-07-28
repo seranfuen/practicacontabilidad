@@ -28,8 +28,19 @@ app.factory("accountService",
         return result;
     });
 
+app.factory("presetsService",
+    function($http) {
+        var result = {
+            AddPresets: function(name, presets) {
+
+            }
+        };
+
+        return result;
+    });
+
 app.controller("LedgerEntryController",
-    function($scope, $http, $window, accountService) {
+    function($scope, $http, $window, accountService, presetsService) {
         // We add a new line (ledger entry, apunte contable)
 
         $scope.addNewLine = function() {
@@ -228,6 +239,22 @@ app.controller("LedgerEntryController",
                 function(code) {
                     $scope.ErrorMessage = "Ha ocurrido un error al intentar guardar la cuenta " + code;
                 });
+        };
+
+        $scope.addCurrentEntriesAsPreset = function (name) {
+
+            var presets = [];
+
+            for (var linePos = 0; linePos < $scope.Lines.length; linePos++) {
+                var line = $scope.Lines[linePos];
+                presets.push({
+                    Account: line.Account,
+                    IsDebit: line.Debit > 0,
+                    Order : linePos + 1
+                });
+            }
+
+            presetsService.AddPresets(name, presets);
         };
 
         $scope.addNewLine();

@@ -44,6 +44,7 @@ namespace PracticaContabilidad
             services.AddScoped<IContabilidadSeeder, DevelopmentContabilidadSeeder>();
             services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IJournalEntryGroupRepository, JournalEntryGroupRepository>();
+            services.AddTransient<IJournalEntryGroupPresetRepository, JournalEntryGroupPresetRepository>();
             services.AddAutoMapper(cfg => { }, typeof(Startup));
             services.AddSingleton<ILedgerEntryUoWFactory, LedgerEntryUoWFactory>();
         }

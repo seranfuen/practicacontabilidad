@@ -391,6 +391,42 @@
 
             });
 
+        describe("managePresets",
+            function() {
+
+                beforeEach(function() {
+                    $scope = $rootScope.$new();
+
+                    presetsService = {
+                        AddPresets: function(name, presets) {}
+                    };
+                    controller = $controller("LedgerEntryController",
+                        { $scope: $scope, accountService: {}, presetsService: presetsService });
+                    spyOn(presetsService, "AddPresets");
+                });
+
+                it("Passes the account, order and nature of all current entries",
+                    function() {
+                        $scope.addNewLine();
+                        $scope.addNewLine();
+                        $scope.Lines[0].Debit = 400;
+                        $scope.Lines[0].Account = "420000001";
+                        $scope.Lines[1].Credit = 320;
+                        $scope.Lines[1].Account = "527000000";
+                        $scope.Lines[2].Credit = 80;
+                        $scope.Lines[2].Account = "537000000";
+
+                        $scope.addCurrentEntriesAsPreset("My Preset");
+
+                        expect(presetsService.AddPresets).toHaveBeenCalledWith("My Preset",
+                            [
+                                { Account: "420000001", IsDebit: true, Order: 1 },
+                                { Account: "527000000", IsDebit: false, Order: 2 },
+                                { Account: "537000000", IsDebit: false, Order: 3 }
+                            ]);
+                    });
+            });
+
         describe("startNewAccountCreation",
             function() {
                 var $scope, controller, accountService;
@@ -399,9 +435,11 @@
                     $scope = $rootScope.$new();
 
                     accountService = {
-                        Accounts: [], CreateAccount: function (code, name, description) {}  };
+                        Accounts: [],
+                        CreateAccount: function(code, name, description) {}
+                    };
                     controller = $controller("LedgerEntryController",
-                        { $scope: $scope, accountService: accountService });
+                        { $scope: $scope, accountService: accountService, presetsService: {} });
                     spyOn(accountService, "CreateAccount");
                 });
 
@@ -421,12 +459,17 @@
                         expect($scope.NewAccount.Description).toEqual("");
                     });
 
-                it("Sends data when calling commitNewAccount", function() {
-                    $scope.startNewAccountCreation("420000000");
-                    $scope.NewAccount.Name = "Kenobi";
-                    $scope.NewAccount.Description = "Hello";
-                    $scope.commitNewAccount();
-                    expect(accountService.CreateAccount).toHaveBeenCalledWith("420000000", "Kenobi", "Hello");
-                });
+                it("Sends data when calling commitNewAccount",
+                    function() {
+                        $scope.startNewAccountCreation("420000000");
+                        $scope.NewAccount.Name = "Kenobi";
+                        $scope.NewAccount.Description = "Hello";
+                        $scope.commitNewAccount();
+                        expect(accountService.CreateAccount).toHaveBeenCalledWith("420000000",
+                            "Kenobi",
+                            "Hello",
+                            jasmine.any(Function),
+                            jasmine.any(Function));
+                    });
             });
     });
